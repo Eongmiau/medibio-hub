@@ -1,4 +1,5 @@
 import { searchPaperIds, fetchPaperSummaries } from '@/lib/pubmed'
+import { translateTitlesBatch } from '@/lib/translate'
 import type { Paper } from '@/types/paper'
 import PaperCard from '@/components/PaperCard'
 import SearchBar from '@/components/SearchBar'
@@ -22,6 +23,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     total = result.total
   }
 
+  const koreanTitles = await translateTitlesBatch(papers.map((p) => ({ id: p.id, title: p.title })))
   const totalPages = Math.ceil(total / perPage)
 
   return (
@@ -44,7 +46,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {papers.map((p) => (
-                  <PaperCard key={p.pmid} paper={p} />
+                  <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
                 ))}
               </div>
 

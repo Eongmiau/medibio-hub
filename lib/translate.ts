@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { unstable_cache } from 'next/cache'
 
 function getClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY
@@ -6,7 +7,7 @@ function getClient(): Anthropic | null {
   return new Anthropic({ apiKey })
 }
 
-export async function translateTitlesBatch(
+async function _translateTitlesBatch(
   papers: { id: string; title: string }[]
 ): Promise<Record<string, string>> {
   const client = getClient()
@@ -41,7 +42,7 @@ export async function translateTitlesBatch(
   }
 }
 
-export async function getKoreanSummary(abstract: string): Promise<string> {
+async function _getKoreanSummary(abstract: string): Promise<string> {
   const client = getClient()
   if (!client || !abstract.trim()) return ''
 
@@ -60,4 +61,22 @@ export async function getKoreanSummary(abstract: string): Promise<string> {
   } catch {
     return ''
   }
+}
+
+export function translateTitlesBatch(
+  papers: { id: string; title: string }[]
+): Promise<Record<string, string>> {
+  if (papers.length === 0) return Promise.resolve({})
+  const key = papers.map((p) => p.id).join(',')
+  return unstable_cache(() => _translateTitlesBatch(papers), [`translate-titles-${key}`], {
+    revalidate: 86400,
+  })()
+}
+
+export function getKoreanSummary(abstract: string): Promise<string> {
+  if (!abstract.trim()) return Promise.resolve('')
+  const key = abstract.slice(0, 80).replace(/\s+/g, '-')
+  return unstable_cache(() => _getKoreanSummary(abstract), [`korean-summary-${key}`], {
+    revalidate: 86400,
+  })()
 }
