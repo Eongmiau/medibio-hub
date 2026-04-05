@@ -31,11 +31,11 @@ export default function PaperCard({ paper, koreanTitle }: PaperCardProps) {
       <div className="flex items-start justify-between gap-3">
         <Link href={`/paper/${paper.pmid}`} className="group flex-1">
           {koreanTitle && (
-            <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 leading-snug transition-colors line-clamp-3 mb-1">
+            <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 leading-snug transition-colors line-clamp-3 mb-1.5">
               {koreanTitle}
             </p>
           )}
-          <h3 className={`leading-snug line-clamp-2 ${koreanTitle ? 'text-xs text-slate-400' : 'text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-3'}`}>
+          <h3 className={`leading-snug ${koreanTitle ? 'text-xs text-slate-500 line-clamp-2' : 'text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-3'}`}>
             {paper.title}
           </h3>
         </Link>
