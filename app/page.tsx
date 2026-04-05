@@ -1,7 +1,6 @@
 import { getLatestPapers } from '@/lib/pubmed'
-import { translateTitlesBatch } from '@/lib/translate'
 import { TOPICS } from '@/types/paper'
-import PaperCard from '@/components/PaperCard'
+import PaperGrid from '@/components/PaperGrid'
 import SearchBar from '@/components/SearchBar'
 import TopicFilter from '@/components/TopicFilter'
 import Link from 'next/link'
@@ -15,8 +14,6 @@ export default async function HomePage() {
     getLatestPapers('biotechnology bioinformatics bioengineering', 4),
   ])
 
-  const allPapers = [...medicinePapers, ...pharmaPapers, ...bioPapers]
-  const koreanTitles = await translateTitlesBatch(allPapers.map((p) => ({ id: p.id, title: p.title })))
 
   return (
     <main>
@@ -62,11 +59,7 @@ export default async function HomePage() {
             </Link>
           </div>
           {medicinePapers.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {medicinePapers.map((p) => (
-                <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
-              ))}
-            </div>
+            <PaperGrid papers={medicinePapers} />
           ) : (
             <p className="text-slate-400 text-sm">논문을 불러오는 중...</p>
           )}
@@ -86,11 +79,7 @@ export default async function HomePage() {
             </Link>
           </div>
           {pharmaPapers.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {pharmaPapers.map((p) => (
-                <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
-              ))}
-            </div>
+            <PaperGrid papers={pharmaPapers} />
           ) : (
             <p className="text-slate-400 text-sm">논문을 불러오는 중...</p>
           )}
@@ -110,11 +99,7 @@ export default async function HomePage() {
             </Link>
           </div>
           {bioPapers.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {bioPapers.map((p) => (
-                <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
-              ))}
-            </div>
+            <PaperGrid papers={bioPapers} />
           ) : (
             <p className="text-slate-400 text-sm">논문을 불러오는 중...</p>
           )}
