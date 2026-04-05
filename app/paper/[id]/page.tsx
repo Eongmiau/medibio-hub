@@ -1,4 +1,5 @@
 import { fetchPaperSummaries, fetchPaperAbstract } from '@/lib/pubmed'
+import { getKoreanSummary } from '@/lib/translate'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -16,6 +17,8 @@ export default async function PaperPage({ params }: PaperPageProps) {
 
   const paper = papers[0]
   if (!paper) notFound()
+
+  const koreanSummary = await getKoreanSummary(abstractText)
 
   const lines = abstractText
     .split('\n')
@@ -81,9 +84,19 @@ export default async function PaperPage({ params }: PaperPageProps) {
           )}
         </div>
 
+        {/* Korean Summary */}
+        {koreanSummary && (
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 space-y-2">
+            <h2 className="text-sm font-bold text-blue-700 flex items-center gap-1.5">
+              🇰🇷 한국어 요약 <span className="font-normal text-blue-400 text-xs">(AI 생성)</span>
+            </h2>
+            <p className="text-slate-700 text-sm leading-relaxed">{koreanSummary}</p>
+          </div>
+        )}
+
         {/* Abstract */}
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-slate-800">초록 (Abstract)</h2>
+          <h2 className="text-lg font-bold text-slate-800">원문 초록 (Abstract)</h2>
           {lines.length > 0 ? (
             <div className="space-y-3">
               {lines.map((line, i) => {

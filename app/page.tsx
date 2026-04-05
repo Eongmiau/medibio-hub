@@ -1,4 +1,5 @@
 import { getLatestPapers } from '@/lib/pubmed'
+import { translateTitlesBatch } from '@/lib/translate'
 import { TOPICS } from '@/types/paper'
 import PaperCard from '@/components/PaperCard'
 import SearchBar from '@/components/SearchBar'
@@ -13,6 +14,9 @@ export default async function HomePage() {
     getLatestPapers('pharmaceutical drug therapy', 4),
     getLatestPapers('biotechnology bioinformatics bioengineering', 4),
   ])
+
+  const allPapers = [...medicinePapers, ...pharmaPapers, ...bioPapers]
+  const koreanTitles = await translateTitlesBatch(allPapers.map((p) => ({ id: p.id, title: p.title })))
 
   return (
     <main>
@@ -60,7 +64,7 @@ export default async function HomePage() {
           {medicinePapers.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {medicinePapers.map((p) => (
-                <PaperCard key={p.pmid} paper={p} />
+                <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
               ))}
             </div>
           ) : (
@@ -84,7 +88,7 @@ export default async function HomePage() {
           {pharmaPapers.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {pharmaPapers.map((p) => (
-                <PaperCard key={p.pmid} paper={p} />
+                <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
               ))}
             </div>
           ) : (
@@ -108,7 +112,7 @@ export default async function HomePage() {
           {bioPapers.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {bioPapers.map((p) => (
-                <PaperCard key={p.pmid} paper={p} />
+                <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
               ))}
             </div>
           ) : (

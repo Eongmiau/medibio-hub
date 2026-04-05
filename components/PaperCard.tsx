@@ -3,6 +3,7 @@ import type { Paper } from '@/types/paper'
 
 interface PaperCardProps {
   paper: Paper
+  koreanTitle?: string
 }
 
 function formatDate(dateStr: string): string {
@@ -21,7 +22,7 @@ function formatDate(dateStr: string): string {
   return dateStr
 }
 
-export default function PaperCard({ paper }: PaperCardProps) {
+export default function PaperCard({ paper, koreanTitle }: PaperCardProps) {
   const authorNames = paper.authors.slice(0, 3).map((a) => a.name).join(', ')
   const hasMoreAuthors = paper.authors.length > 3
 
@@ -29,7 +30,12 @@ export default function PaperCard({ paper }: PaperCardProps) {
     <article className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-blue-300 transition-all duration-200 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
         <Link href={`/paper/${paper.pmid}`} className="group flex-1">
-          <h3 className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 leading-snug transition-colors line-clamp-3">
+          {koreanTitle && (
+            <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 leading-snug transition-colors line-clamp-3 mb-1">
+              {koreanTitle}
+            </p>
+          )}
+          <h3 className={`leading-snug line-clamp-2 ${koreanTitle ? 'text-xs text-slate-400' : 'text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-3'}`}>
             {paper.title}
           </h3>
         </Link>

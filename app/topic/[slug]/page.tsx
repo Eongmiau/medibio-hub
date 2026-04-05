@@ -1,4 +1,5 @@
 import { searchPaperIds, fetchPaperSummaries } from '@/lib/pubmed'
+import { translateTitlesBatch } from '@/lib/translate'
 import { TOPICS } from '@/types/paper'
 import PaperCard from '@/components/PaperCard'
 import TopicFilter from '@/components/TopicFilter'
@@ -27,6 +28,7 @@ export default async function TopicPage({ params, searchParams }: TopicPageProps
   const { ids, total } = await searchPaperIds(topic.query, perPage, page)
   const papers = await fetchPaperSummaries(ids)
   const totalPages = Math.ceil(total / perPage)
+  const koreanTitles = await translateTitlesBatch(papers.map((p) => ({ id: p.id, title: p.title })))
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
@@ -45,7 +47,7 @@ export default async function TopicPage({ params, searchParams }: TopicPageProps
         <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {papers.map((p) => (
-              <PaperCard key={p.pmid} paper={p} />
+              <PaperCard key={p.pmid} paper={p} koreanTitle={koreanTitles[p.id]} />
             ))}
           </div>
 
