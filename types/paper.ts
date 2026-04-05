@@ -26,6 +26,7 @@ export const TOPICS = [
   { slug: 'oncology', label: '종양학', query: 'cancer oncology tumor immunotherapy', icon: '🔬' },
   { slug: 'neuroscience', label: '신경과학', query: 'neuroscience brain neural cognitive', icon: '🧠' },
   { slug: 'genomics', label: '유전체학', query: 'genomics genetics genome sequencing', icon: '🧪' },
+  { slug: 'gmp', label: 'GMP', query: 'good manufacturing practice GMP pharmaceutical quality', icon: '🏭' },
 ] as const
 
 export type TopicSlug = (typeof TOPICS)[number]['slug']
